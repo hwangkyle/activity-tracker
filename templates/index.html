@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Two Way Tracker</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+<script src="{{ url_for('static', filename='js/index.js') }}"></script>
+{% endblock %}
+
+{% block body %}
+
+<div id="main">
+    <div id="calendar-container">
+        <div id="calendar-header">
+            <h1 id="year">{{ year }}</h1>
+            <button>asdf</button>
+        </div>
+        <div id="calendar">
+{% for month_days in year_days %}
+{% set month=loop.index %}
+            {% include 'month.html' with context %}
+{% endfor %}
+        </div>
+    </div>
+    
+    {% include 'today.html' with context %}
+</div>
+
+{% endblock %}

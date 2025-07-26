@@ -1,0 +1,32 @@
+<div class="month-container">
+    <span>{{ month_name[month] }}</span>
+    <table class="month">
+        <thead>
+            <tr>
+                <th>S</th>
+                <th>M</th>
+                <th>T</th>
+                <th>W</th>
+                <th>T</th>
+                <th>F</th>
+                <th>S</th>
+            </tr>
+        </thead>
+        <tbody>
+{% for week in month_days %}
+            <tr>
+{% for day in week %}
+{% if day is none %}
+                <td class="blank"></td>
+{% else %}
+{% set date = year.__str__() + '-' + format_num(month) + '-' + format_num(day) %}
+                <td class="day {{ 'today' if day == now.day }} {{ 'active' if date in active_dates }}">
+                    {{ day }}
+                </td>
+{% endif %}
+{% endfor %}
+            </tr>
+{% endfor %}
+        </tbody>
+    </table>
+</div>

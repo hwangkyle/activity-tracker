@@ -1,0 +1,121 @@
+body {
+    --green: 0, 88, 0; /* Anything with >0.69 opacity should have white text */
+
+    --gray: #888;
+    
+    --cell-size: 1.5rem;
+
+    font-family: 'Courier New', Courier, monospace;
+}
+
+#main {
+    display: flex;
+    height: 100%;
+    width: 100%;
+}
+
+#calendar-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    border-right: 1px solid black;
+    flex: 1 0 calc(50% - 1rem);
+}
+
+#calendar-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+}
+
+#calendar {
+    padding: 0 1rem;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    height: fit-content;
+    justify-content: space-around;
+    user-select: none; 
+    overflow: auto;
+    /* height: 100%; */
+}
+
+.month-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    flex: 1 0 25%;
+}
+
+th, td {
+    height: var(--cell-size);
+    width: var(--cell-size);
+    text-align: center;
+    vertical-align: middle;
+}
+.day {
+    border-radius: 0.25rem;
+}
+.day:hover {
+    background-color: rgba(var(--green), 0.1);
+    cursor: pointer;
+}
+
+.active {
+    background-color: rgba(var(--green), 0.8) !important;
+    color: white;
+}
+
+/* today.html */
+
+#tasks-container {
+    --margin: 1rem;
+    display: flex;
+    flex-direction: column;
+    margin: var(--margin);
+    overflow: auto;
+    flex: 1 0 calc(50% - var(--margin));
+}
+
+#tasks {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.task {
+    display: grid;
+    place-self: center;
+    justify-items: center;
+    align-content: center;
+    width: calc(100%);
+    border: 1px solid var(--gray);
+    border-radius: 0.5rem;
+    cursor: pointer;
+}
+.task.done {
+    text-decoration: line-through;
+    background-color: rgba(var(--green), 0.1)
+}
+.task.pass {
+    color: gray;
+    font-style: italic;
+}
+.task:hover {
+    background-color: rgba(var(--green), 0.25);
+}
+.task:active {
+    background-color: rgba(var(--green), 0.75);
+    color: white;
+}
+
+.task-name {
+    font-size: 1.5rem;
+    text-align: center;
+    user-select: none; 
+}
