@@ -1,11 +1,27 @@
 body {
     --green: 0, 88, 0; /* Anything with >0.69 opacity should have white text */
 
-    --gray: #888;
+    --gray: 88, 88, 88;
     
     --cell-size: 1.5rem;
 
+    
+}
+* {
     font-family: 'Courier New', Courier, monospace;
+}
+
+.hide {
+    display: none;
+}
+input:focus,
+select:focus,
+textarea:focus,
+button:focus {
+    outline: none;
+}
+h1 {
+    margin: 0;
 }
 
 #main {
@@ -43,6 +59,11 @@ body {
     /* height: 100%; */
 }
 
+#year {
+    margin-left: 1rem;
+    margin-top: 1rem;
+}
+
 .month-container {
     display: flex;
     flex-direction: column;
@@ -61,13 +82,16 @@ th, td {
     border-radius: 0.25rem;
 }
 .day:hover {
-    background-color: rgba(var(--green), 0.1);
-    cursor: pointer;
+    /* font-weight: bold;
+    cursor: pointer; */
 }
 
 .active {
     background-color: rgba(var(--green), 0.8) !important;
     color: white;
+}
+.today {
+    text-decoration: underline;
 }
 
 /* today.html */
@@ -79,6 +103,7 @@ th, td {
     margin: var(--margin);
     overflow: auto;
     flex: 1 0 calc(50% - var(--margin));
+    gap: 1rem;
 }
 
 #tasks {
@@ -88,34 +113,108 @@ th, td {
     gap: 0.5rem;
 }
 
+#tasks-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+#tasks-top-menu {
+    border: 1px solid gray;
+    border-radius: 0.5rem;
+    height: 1.5rem;
+    padding: 0.5rem;
+    background-color: rgba(var(--gray), 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.edit {
+    cursor: pointer;
+    padding: 0.5rem;
+}
+.edit:hover {
+    background-color: rgba(var(--gray), 0.3);
+}
+.edit:active {
+    background-color: rgba(var(--gray), 0.5);
+}
+
+.trash {
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 0.5rem;
+}
+.trash:hover {
+    background-color: rgba(var(--gray), 0.4);
+}
+.trash:active {
+    background-color: rgba(var(--gray), 0.6);
+}
+
 .task {
-    display: grid;
-    place-self: center;
-    justify-items: center;
-    align-content: center;
-    width: calc(100%);
-    border: 1px solid var(--gray);
+    display: block;
+    width: 100%;
+    border: 1px solid gray;
     border-radius: 0.5rem;
     cursor: pointer;
+    position: relative;
 }
 .task.done {
     text-decoration: line-through;
-    background-color: rgba(var(--green), 0.1)
+    background-color: rgba(var(--green), 0.2);
+    border-color: rgb(var(--green), 0.6);
 }
 .task.pass {
+    text-decoration: line-through;
+    background-color: rgba(var(--gray), 0.2);
     color: gray;
     font-style: italic;
 }
 .task:hover {
-    background-color: rgba(var(--green), 0.25);
+    background-color: rgba(var(--green), 0.3);
 }
 .task:active {
-    background-color: rgba(var(--green), 0.75);
-    color: white;
+    background-color: rgba(var(--green), 0.6);
+}
+
+.select-box {
+    display: block;
+    position: relative;
+    float: left;
+    border: 1px solid gray;
+    border-radius: 0.25rem;
+    width: 1rem;
+    height: 1rem;
+    margin: 0.25rem;
+    margin-bottom: 0;
+    z-index: 99;
+}
+.select-box.checked {
+    background-color: gray;
 }
 
 .task-name {
     font-size: 1.5rem;
     text-align: center;
     user-select: none; 
+}
+
+.add-icon {
+    margin-top: 0.25rem;
+    margin-left: 0.25rem;
+}
+
+.add-text {
+    font-size: 1.4rem;
+    /* text-align: center; */
+    height: 1.5rem;
+    width: 100%;
+    border: 0;
+    background-color: initial;
 }

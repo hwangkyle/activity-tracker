@@ -20,7 +20,7 @@
                 <td class="blank"></td>
 {% else %}
 {% set date = year.__str__() + '-' + format_num(month) + '-' + format_num(day) %}
-                <td class="day {{ 'today' if day == now.day }} {{ 'active' if date in active_dates }}">
+                <td class="day {{ 'today' if dt_to_str(now).startswith(date) }} {{ 'active' if date in active_dates }}">
                     {{ day }}
                 </td>
 {% endif %}

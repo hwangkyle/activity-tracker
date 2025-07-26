@@ -3,9 +3,9 @@ from calendar import monthrange
 from typing import List
 
 def get_year_days(year: int):
-    return [get_month_days(year, month) for month in range(1, 13)]
+    return [_get_month_days(year, month) for month in range(1, 13)]
 
-def get_month_days(year: int, month: int) -> List[List[int | None]]:
+def _get_month_days(year: int, month: int) -> List[List[int | None]]:
     first_weekday, num_days = monthrange(year, month)
     first_weekday = (first_weekday + 1) % 7
 
@@ -24,7 +24,10 @@ def get_month_days(year: int, month: int) -> List[List[int | None]]:
     
     return days
 
-def format_num(num: int) -> str:
+def format_num(num: int|str) -> str:
     if num >= 10:
         return str(num)
     return f'0{num}'
+
+def dt_to_str(dt: datetime) -> str:
+    return f'{dt.year}-{format_num(dt.month)}-{format_num(dt.day)} {format_num(dt.hour)}:{format_num(dt.minute)}:{format_num(dt.second)}'

@@ -3,6 +3,12 @@ const State = Object.freeze({
     PASS: 2
 })
 
+const updateCalendar = async () => {
+    let response = await fetch('/calendar');
+    let html = await response.text();
+    document.querySelector("#calendar").innerHTML = html;
+}
+
 const changeState = async el => {
     let [task_id, task, hide, record_id, state_id, state, datetime] = JSON.parse(el.dataset.data.replace(/'/g, '"').replace(/None/g, 'null'))
 
@@ -12,9 +18,7 @@ const changeState = async el => {
     recordParam = record_id ? `record_id=${record_id}` : null;
     params = [stateParam, recordParam].join('&');
 
-    console.log(`/state/${task_id}?${params}`)
     let response = await fetch(`/state/${task_id}?${params}`, { method: 'POST' });
-    console.log(response)
     let [ new_state_id, new_record_id ] = await response.json();
 
     if (new_state_id === State.DONE) {
@@ -30,4 +34,55 @@ const changeState = async el => {
     }
 
     el.dataset.data = JSON.stringify([task_id, task, hide, record_id, new_state_id, state, datetime]);
+
+    updateCalendar();
+}
+
+const toAddTask = async el => {
+    let svg = el.children[0];
+    let input = el.children[1];
+
+    svg.classList.add('hide');
+    input.classList.remove('hide');
+    input.focus();
+}
+
+const addTask = async el => {
+    let svg = el.parentElement.children[0];
+    svg.classList.remove('hide');
+    el.classList.add('hide');
+
+    if (el.value.trim() === '') return;
+    let response = await fetch(`/task/${el.value}`, { method: 'POST' });
+    let html = await response.text();
+    el.value = '';
+
+    document.querySelector("#tasks").innerHTML = html;
+}
+
+let selectedTasks = new Set();
+const selectTask = async el => {
+    if (!el.parentElement.classList.contains('task')) return;
+    let taskId = Number(el.dataset.taskid);
+    if (selectedTasks.has(taskId)) {
+        selectedTasks.delete(taskId);
+    } else {
+        selectedTasks.add(taskId);
+    }
+
+    let checked = (Number(el.dataset.checked) + 1) % 2;
+    el.dataset.checked = checked;
+    el.classList.toggle('checked');
+}
+
+const deleteTasks = async () => {
+    if (selectedTasks.size === 0) return;
+    if (confirm(`Are you sure you want to delete ${selectedTasks.size} task(s)?`)); {
+        let taskIds = [...selectedTasks].join(',');
+        let response = await fetch(`/task/${taskIds}`, { method: 'DELETE' });
+        selectedTasks.clear();
+        let html = await response.text();
+        document.querySelector("#tasks").innerHTML = html;
+        updateCalendar();
+    }
 }
