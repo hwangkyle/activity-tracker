@@ -144,20 +144,19 @@ th, td {
     background-color: rgba(var(--gray), 0.5);
 }
 
+
+.task-options {
+    float: right;
+    height: 100%;
+}
 .menu-item {
     cursor: pointer;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 2rem;
-    height: 2rem;
+    height: 100%;
+    aspect-ratio: 1 / 1;
     border-radius: 0.5rem;
-}
-.menu-item:hover {
-    background-color: rgba(var(--gray), 0.4);
-}
-.menu-item:active {
-    background-color: rgba(var(--gray), 0.6);
 }
 
 .task {
@@ -167,6 +166,7 @@ th, td {
     border-radius: 0.5rem;
     cursor: pointer;
     position: relative;
+    padding: 0 1rem;
 }
 .task.done {
     text-decoration: line-through;
@@ -180,10 +180,13 @@ th, td {
     font-style: italic;
 }
 .task:hover {
-    background-color: rgba(var(--green), 0.3);
+    text-decoration: underline;
 }
-.task:active {
-    background-color: rgba(var(--green), 0.6);
+.trash:hover {
+    fill: rgba(200, 0, 0, 0.3);
+}
+.trash:active {
+    fill: rgba(200, 0, 0, 0.6);
 }
 
 .select-box {

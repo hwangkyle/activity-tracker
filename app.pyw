@@ -92,7 +92,6 @@ def delete_task(task_ids: str):
         global now
         db.delete_task(task_ids)
         day_data = get_day_data(date_util.dt_to_str(now))
-        print(day_data)
         return render_template('tasks.html', day_data=day_data, State=enums.State)
 
     except Exception as e:
@@ -127,4 +126,4 @@ def get_day_data(dt: str):
     return day_data
 
 if __name__ == '__main__':
-    app.run()
+    app.run(port=5001)

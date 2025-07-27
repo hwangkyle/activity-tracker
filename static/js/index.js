@@ -3,18 +3,16 @@ const State = Object.freeze({
     PASS: 2
 });
 
-let selectedTasks = new Set();
+let currViewedTask = '';
 
 const updateCalendar = async taskIds => {
-    let response = await fetch(`/calendar${ taskIds ? `?task_ids=${taskIds}` : ' '}`);
+    let response = await fetch(`/calendar${ taskIds ? `?task_ids=${taskIds}` : ''}`);
     let html = await response.text();
     document.querySelector("#calendar").innerHTML = html;
 }
 
 const changeState = async el => {
     let [task_id, task, hide, record_id, state_id, state, datetime] = JSON.parse(el.dataset.data.replace(/'/g, '"').replace(/None/g, 'null'))
-
-    console.log(task_id, task, hide, record_id, state_id, state, datetime)
 
     stateParam = `state_id=${(state_id ?? 0)+1}`;
     recordParam = record_id ? `record_id=${record_id}` : null;
@@ -62,41 +60,32 @@ const addTask = async el => {
     document.querySelector("#tasks").innerHTML = html;
 }
 
-const selectTask = async el => {
-    if (!el.parentElement.classList.contains('task')) return;
-    let taskId = Number(el.dataset.taskid);
-    if (selectedTasks.has(taskId)) {
-        selectedTasks.delete(taskId);
+const viewTask = async el => {
+    let taskId = el.dataset.taskid;
+    if (currViewedTask === taskId) {
+        updateCalendar();
+        document.querySelector(`#view-task-${taskId} .yes-view`).classList.add('hide');
+        document.querySelector(`#view-task-${taskId} .no-view`).classList.remove('hide');
+        currViewedTask = '';
     } else {
-        selectedTasks.add(taskId);
+        updateCalendar(taskId);
+        try {
+            document.querySelector(`#view-task-${currViewedTask} .yes-view`).classList.add('hide');
+            document.querySelector(`#view-task-${currViewedTask} .no-view`).classList.remove('hide');
+        } catch { }
+        document.querySelector(`#view-task-${taskId} .yes-view`).classList.remove('hide');
+        document.querySelector(`#view-task-${taskId} .no-view`).classList.add('hide');
+        currViewedTask = taskId;
     }
-
-    let checked = (Number(el.dataset.checked) + 1) % 2;
-    el.dataset.checked = checked;
-    el.classList.toggle('checked');
 }
 
-const deleteTasks = async () => {
-    if (selectedTasks.size === 0) return;
-    if (confirm(`Are you sure you want to delete ${selectedTasks.size} task(s)?`)); {
-        let taskIds = [...selectedTasks].join(',');
-        let response = await fetch(`/task/${taskIds}`, { method: 'DELETE' });
-        selectedTasks.clear();
+const deleteTask = async el => {
+    let taskId = el.dataset.taskid;
+    let taskName = el.dataset.taskname;
+    if (confirm(`Are you sure you want to delete ${taskName}? (This will permanently delete all history with this task!)`)) {
+        let response = await fetch(`/task/${taskId}`, { method: 'DELETE' });
         let html = await response.text();
         document.querySelector("#tasks").innerHTML = html;
         updateCalendar();
     }
-}
-
-const viewTasks = async () => {
-    let taskIds = [...selectedTasks].join(',');
-    updateCalendar(taskIds);
-    document.querySelectorAll('.select-box').forEach(element => {
-        element.classList.remove('checked');
-        element.nextElementSibling.classList.remove('bold');
-        if (selectedTasks.has(Number(element.dataset.taskid))) {
-            element.nextElementSibling.classList.add('bold');
-        }
-    });
-    selectedTasks.clear();
 }
