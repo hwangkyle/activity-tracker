@@ -1,0 +1,13 @@
+# To do
+- ~~Filter calendar on task selection.~~
+- ~~Make this my new tab screen, if possible.~~
+- Move icons to each row. Add a reset button, too, then. Be specific? Reset view. Or something. Or add a(n) (un)select all button.
+- Make the green on the calendar a gradient depending on how many tasks were completed.
+- Make the task name editable.
+- Show checkboxes/delete only when an "edit" button is click + necessary styling changes.
+- Click on date on calendar to show that day's activites.
+- Make adding a task more clear.
+- Change years.
+- Some sort of hover functionality over the calendar dates.
+- Make prettier.
+- Maybe add another color for the PASSed tasks.

@@ -4,6 +4,8 @@ from datetime import datetime, timezone
 
 from enums import State
 
+DB_PATH = 'C:\\Users\\kyleh\\Documents\\dev\\two-way-tracker\\data.db'
+
 def _get_offset() -> int:
     """
     In minutes (add to UTC to get local)
@@ -26,7 +28,7 @@ def _get_offset() -> int:
     return int(diff_dt.total_seconds() / 60)
 
 def _execute(query: str) -> List[Any]:
-    conn = sql.connect('./data.db')
+    conn = sql.connect(DB_PATH)
 
     cursor = conn.execute(query)
     rows = cursor.fetchall()
@@ -41,15 +43,16 @@ def _execute(query: str) -> List[Any]:
 def get_tasks() -> List[Any]:
     return _execute("SELECT task_id, task FROM tasks")
 
-def get_active_dates(year: int) -> List[Any]:
+def get_active_dates(year: int, task_ids: str | None = None) -> List[Any]:
     """
-    Only gets this month.
+    Only gets this year.
     """
+    task_ids_where = '' if task_ids is None else f' AND task_id IN ({task_ids})'
     rows = _execute(
         f"""
         SELECT DISTINCT date(r.datetime, '{_get_offset()} minute') as date
         FROM records r
-        WHERE date >= '{year}' AND state_id=1
+        WHERE date >= '{year}' AND state_id=1{task_ids_where}
         """
     )
     results = list(map(lambda x: x[0], rows))

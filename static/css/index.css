@@ -23,6 +23,9 @@ button:focus {
 h1 {
     margin: 0;
 }
+.bold {
+    font-weight: bold;
+}
 
 #main {
     display: flex;
@@ -141,7 +144,7 @@ th, td {
     background-color: rgba(var(--gray), 0.5);
 }
 
-.trash {
+.menu-item {
     cursor: pointer;
     display: inline-flex;
     align-items: center;
@@ -150,10 +153,10 @@ th, td {
     height: 2rem;
     border-radius: 0.5rem;
 }
-.trash:hover {
+.menu-item:hover {
     background-color: rgba(var(--gray), 0.4);
 }
-.trash:active {
+.menu-item:active {
     background-color: rgba(var(--gray), 0.6);
 }
 

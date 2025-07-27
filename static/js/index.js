@@ -1,10 +1,12 @@
 const State = Object.freeze({
     DONE: 1,
     PASS: 2
-})
+});
 
-const updateCalendar = async () => {
-    let response = await fetch('/calendar');
+let selectedTasks = new Set();
+
+const updateCalendar = async taskIds => {
+    let response = await fetch(`/calendar${ taskIds ? `?task_ids=${taskIds}` : ' '}`);
     let html = await response.text();
     document.querySelector("#calendar").innerHTML = html;
 }
@@ -60,7 +62,6 @@ const addTask = async el => {
     document.querySelector("#tasks").innerHTML = html;
 }
 
-let selectedTasks = new Set();
 const selectTask = async el => {
     if (!el.parentElement.classList.contains('task')) return;
     let taskId = Number(el.dataset.taskid);
@@ -85,4 +86,17 @@ const deleteTasks = async () => {
         document.querySelector("#tasks").innerHTML = html;
         updateCalendar();
     }
+}
+
+const viewTasks = async () => {
+    let taskIds = [...selectedTasks].join(',');
+    updateCalendar(taskIds);
+    document.querySelectorAll('.select-box').forEach(element => {
+        element.classList.remove('checked');
+        element.nextElementSibling.classList.remove('bold');
+        if (selectedTasks.has(Number(element.dataset.taskid))) {
+            element.nextElementSibling.classList.add('bold');
+        }
+    });
+    selectedTasks.clear();
 }
