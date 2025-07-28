@@ -72,6 +72,26 @@ h1 {
     margin-top: 1rem;
 }
 
+#year-buttons {
+    display: flex;
+    justify-content: center;
+    align-self: center;
+    gap: 1rem;
+    margin-right: 1rem;
+}
+.year-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    height: 2rem;
+    width: 2rem;
+    font-size: 1.5rem;
+    border-radius: 99rem;
+}
+.year-button:hover {
+    background-color: #eee;
+}
+
 .month-container {
     display: flex;
     flex-direction: column;

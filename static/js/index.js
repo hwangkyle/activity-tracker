@@ -10,16 +10,22 @@ let currViewedTask = '';
 let [__month, __day, __year] = new Date().toLocaleString().split(/,? /g)[0].split('/').map(val => val.length === 1 ? `0${val}` : val);
 let today = `${__year}-${__month}-${__day}`
 let currViewedDt = `${__year}-${__month}-${__day}`;
+let currViewedYear = __year;
 
-const updateCalendar = async (taskIds, useCurr=true) => {
+const updateCalendar = async (taskIds, useCurr=true, year=__year) => {
     taskParam = '';
-    if (taskIds) taskParam = `?task_ids=${taskIds}`;
-    else if (useCurr && currViewedTask) taskParam = `?task_ids=${currViewedTask}`;
-    let path = `/calendar${taskParam}`;
+    if (taskIds)
+        taskParam = `?task_ids=${taskIds}`;
+    else if (useCurr && currViewedTask)
+        taskParam = `?task_ids=${currViewedTask}`;
+
+    currViewedYear = year;
+
+    let path = `/calendar/${currViewedYear}${taskParam}`;
     if (debug) console.log(path);
     let response = await fetch(path);
     let html = await response.text();
-    document.querySelector("#calendar").innerHTML = html;
+    document.querySelector("#calendar-container").innerHTML = html;
     maintainViews();
 }
 
@@ -146,6 +152,14 @@ const getDayData = async el => {
         document.querySelector('.task.add-task').classList.add('hide');
     }
     maintainViews();
+}
+
+const changeYear = async next => {
+    if (next) {
+        updateCalendar(null, true, currViewedYear+1);
+    } else {
+        updateCalendar(null, true, currViewedYear-1);
+    }
 }
 
 const maintainViews = () => {

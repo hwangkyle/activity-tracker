@@ -1,5 +1,14 @@
 
-{% for month_days in year_days %}
-    {% set month=loop.index %}
-    {% include 'month.html' with context %}
-{% endfor %}
+<div id="calendar-header">
+    <h1 id="year">{{ year }}</h1>
+    <div id="year-buttons">
+        <button class="year-button" onclick="changeYear(false)"> < </button>
+        <button class="year-button" onclick="changeYear(true)"> > </button>
+    </div>
+</div>
+<div id="calendar">
+    {% for month_days in year_days %}
+        {% set month=loop.index %}
+        {% include 'month.html' with context %}
+    {% endfor %}
+</div>

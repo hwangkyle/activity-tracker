@@ -103,13 +103,15 @@ def delete_task(task_ids: str):
         print('ERROR:', e)
         return [500]
 
-@app.get('/calendar')
-def get_calendar():
+@app.get('/calendar/<int:yr>')
+def get_calendar(yr: int):
+    global year
     task_ids = request.args.get('task_ids')
+    year = yr if yr else now.year
     return render_template(
         'calendar.html',
-        year_days=date_util.get_year_days(now.year),
-        active_dates=db.get_active_dates(now.year, task_ids=task_ids),
+        year_days=date_util.get_year_days(year),
+        active_dates=db.get_active_dates(year, task_ids=task_ids),
         month_name=calendar.month_name,
         format_num=date_util.format_num,
         dt_to_str=date_util.dt_to_str,

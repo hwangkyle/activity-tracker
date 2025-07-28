@@ -10,13 +10,7 @@
 
 <div id="main">
     <div id="calendar-container">
-        <div id="calendar-header">
-            <h1 id="year">{{ year }}</h1>
-            <!-- <button>asdf</button> -->
-        </div>
-        <div id="calendar">
-            {% include 'calendar.html' with context %}
-        </div>
+        {% include 'calendar.html' with context %}
     </div>
     
     {% include 'today.html' with context %}
