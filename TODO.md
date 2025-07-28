@@ -1,4 +1,5 @@
 # To do
+- ! DISABLE HISTORICAL/FUTURE DATA ENTRY; ONLY TODAY.
 - ~~Filter calendar on task selection.~~
 - ~~Make this my new tab screen, if possible.~~
 - ~~Move icons to each row.~~

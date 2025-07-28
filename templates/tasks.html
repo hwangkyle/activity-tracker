@@ -1,6 +1,6 @@
-{% for task_id, task, hide, record_id, state_id, state, datetime, date in day_data %}
+{% for task_id, task, record_id, state_id, state, datetime in day_data %}
     <div class="task {{ 'done' if state_id == State.DONE }} {{ 'pass' if state_id == State.PASS }}"
-        data-data="{{[task_id, task, hide, record_id, state_id, state, datetime]}}"
+        data-data="{{[task_id, task,  record_id, state_id, state, datetime]}}"
         onclick="changeState(this)"
     >
         <div class="task-name-container">

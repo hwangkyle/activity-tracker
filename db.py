@@ -6,9 +6,10 @@ from enums import State
 
 DB_PATH = 'C:\\Users\\kyleh\\Documents\\dev\\two-way-tracker\\data.db'
 
-def _get_offset() -> int:
+def _get_offset(to_local = True, tweak = False) -> int:
     """
-    In minutes (add to UTC to get local)
+    to_local: True if UTC + _get_offset() == local else False (i.e. local + _get_offset() == UTC)
+    tweak: basically use True when inserting/updating, False when selecting
     """
     local_dt = datetime.now()
 
@@ -23,9 +24,17 @@ def _get_offset() -> int:
         _utc_dt.microsecond
     )
 
-    diff_dt = local_dt - utc_dt
+    diff_dt = local_dt - utc_dt if to_local else utc_dt - local_dt
 
-    return int(diff_dt.total_seconds() / 60)
+    offset = int(diff_dt.total_seconds() / 60)
+
+    if tweak:
+        if offset < 0:
+            offset += 1
+        else:
+            offset -= 1
+    
+    return offset
 
 def _execute(query: str) -> List[Any]:
     conn = sql.connect(DB_PATH)
@@ -63,14 +72,13 @@ def get_day(dt: str) -> List[Any]:
     """
     dt should be in local time.
     """
-    return _execute(
-        f"""
-        SELECT t.task_id, task, hide, r.record_id, s.state_id, s.state, datetime, date
+    sql = f"""SELECT t.task_id, task, r.record_id, s.state_id, s.state, datetime
         FROM tasks t
         LEFT JOIN records r ON t.task_id=r.task_id AND date('{dt}')=date(r.datetime, '{_get_offset()} minute')
         LEFT JOIN states s ON r.state_id=s.state_id
         """
-    )
+    print(sql)
+    return _execute(sql)
 
 def add_task(task: str) -> None:
     _execute(f"INSERT INTO tasks (task) VALUES ('{task}')")

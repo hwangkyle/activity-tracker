@@ -11,9 +11,7 @@ CREATE TABLE records (
     state_id  INTEGER REFERENCES states (state_id) 
                       NOT NULL,
     datetime  TEXT    NOT NULL
-                      DEFAULT (datetime() ),
-    date      TEXT    AS (date(datetime) ) 
-                      NOT NULL
+                      DEFAULT (datetime() )
 );
 ```
 ### tasks
@@ -24,8 +22,6 @@ CREATE TABLE tasks (
                            NOT NULL,
     task    TEXT           UNIQUE
                            COLLATE NOCASE
-                           NOT NULL,
-    hide    NUMERIC (0, 1) DEFAULT (0) 
                            NOT NULL
 );
 ```

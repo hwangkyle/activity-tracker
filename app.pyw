@@ -12,6 +12,7 @@ app = Flask(__name__)
 year_days = []
 year = -1
 now = datetime.now()
+display_date = date_util.dt_to_str(now)
 active_dates = set()
 day_data = []
 
@@ -20,15 +21,17 @@ def index():
     global year_days
     global year
     global now
+    global display_date
     global active_dates
     global tasks
     global day_data
     
     now = datetime.now()
+    display_date = date_util.dt_to_str(now)
     year_days = date_util.get_year_days(now.year)
     year = now.year
     active_dates = set(db.get_active_dates(now.year))
-    day_data = db.get_day(date_util.dt_to_str(now))
+    day_data = db.get_day(display_date)
 
     return render_template(
         'index.html',
@@ -44,16 +47,23 @@ def index():
         State=enums.State
     )
 
-@app.post('/state/<int:task_id>')
-def update_state(task_id: int):
+@app.post('/state/<int:task_id>/<string:viewing_dt>')
+def update_state(task_id: int, viewing_dt: str):
+    """
+    viewing_dt should be local
+    """
     state_id = int(request.args.get('state_id') or -1)
     record_id = int(request.args.get('record_id') or -1)
     if state_id == State.DONE:
-        db._execute(f"INSERT INTO records (task_id, state_id) VALUES ({task_id}, {State.DONE})")
+        x = f"INSERT INTO records (task_id, state_id, datetime) VALUES ({task_id}, {State.DONE}, datetime('{viewing_dt}', '{db._get_offset(False, True)} minute'))"
+        print(x)
+        db._execute(x)
         record_id = db._execute("SELECT MAX(record_id) FROM records")
         return [ State.DONE, record_id ]
     elif state_id == State.PASS:
-        db._execute(f"UPDATE records SET state_id={State.PASS} WHERE record_id={record_id}")
+        x = f"UPDATE records SET state_id={State.PASS}, datetime=datetime('{viewing_dt}', '{db._get_offset(False, True)} minute') WHERE record_id={record_id}"
+        print(x)
+        db._execute(x)
         return [ State.PASS ]
     else:
         db._execute(f"DELETE FROM records WHERE record_id={record_id}")
@@ -71,8 +81,9 @@ def add_task(task: str):
     try:
         global day_data
         global now
+        global display_date
         db.add_task(task)
-        day_data = db.get_day(date_util.dt_to_str(now))
+        day_data = db.get_day(display_date)
         return render_template('tasks.html', day_data=day_data, State=enums.State)
     except Exception as e:
         print('ERROR:', e)
@@ -83,8 +94,9 @@ def delete_task(task_ids: str):
     try:
         global day_data
         global now
+        global display_date
         db.delete_task(task_ids)
-        day_data = db.get_day(date_util.dt_to_str(now))
+        day_data = db.get_day(display_date)
         return render_template('tasks.html', day_data=day_data, State=enums.State)
 
     except Exception as e:
@@ -113,17 +125,20 @@ def get_active_dates():
 
 @app.get('/day-data/<string:dt>')
 def get_day_data(dt: str):
+    global display_date
     global day_data
-    day_data = db.get_day(dt)
+    display_date = dt
+    day_data = db.get_day(display_date)
     return render_template('tasks.html', day_data=day_data, State=enums.State)
 
 @app.put('/task-name/<int:task_id>/<string:task_name>')
 def change_task_name(task_id: int, task_name: str):
     global day_data
     global now
+    global display_date
     db.change_task_name(task_id, task_name)
-    day_data = db.get_day(date_util.dt_to_str(now))
+    day_data = db.get_day(display_date)
     return render_template('tasks.html', day_data=day_data, State=enums.State)
 
 if __name__ == '__main__':
-    app.run(port=5001)
+    app.run(port=5001, debug=True)
