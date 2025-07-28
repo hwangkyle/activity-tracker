@@ -90,7 +90,6 @@ th, td {
 }
 .day.viewing {
     font-weight: bold;
-    background-color: rgba(var(--green), 0.4);
 }
 
 .active {

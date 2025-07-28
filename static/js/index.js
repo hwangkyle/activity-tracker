@@ -128,4 +128,8 @@ const getDayData = async el => {
     document.querySelector(`#date-${currViewedDt}`).classList.remove('viewing');
     document.querySelector(`#date-${dt}`).classList.add('viewing');
     currViewedDt = dt;
+    if (currViewedTask !== '') {
+        document.querySelector(`#view-task-${currViewedTask} .yes-view`).classList.remove('hide');
+        document.querySelector(`#view-task-${currViewedTask} .no-view`).classList.add('hide');
+    }
 }
