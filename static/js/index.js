@@ -89,3 +89,30 @@ const deleteTask = async el => {
         updateCalendar();
     }
 }
+
+const toChangeTaskName = async el => {
+    let taskId = el.dataset.taskid;
+    document.querySelector(`#task-options-${taskId}`).classList.add('hide');
+    document.querySelector(`#task-name-${taskId}`).classList.add('hide');
+    let input = document.querySelector(`#task-name-input-${taskId}`);
+    input.classList.remove('hide');
+    input.focus();
+}
+
+const changeTaskName = async el => {
+    let taskId = el.dataset.taskid;
+    let input = document.querySelector(`#task-name-input-${taskId}`);
+    let taskName = input.value;
+    let options = document.querySelector(`#task-options-${taskId}`);
+    let taskNameEl = document.querySelector(`#task-name-${taskId}`);
+    if (taskName.trim() !== '' && taskName !== el.dataset.taskname) {
+        let response = await fetch(`/task-name/${taskId}/${taskName}`, { method: 'PUT' });
+        let html = await response.text();
+        document.querySelector("#tasks").innerHTML = html;
+    } else {
+        options.classList.remove('hide');
+        taskNameEl.classList.remove('hide');
+        input.classList.add('hide');
+        input.value = el.dataset.taskname;
+    }
+}

@@ -78,3 +78,6 @@ def add_task(task: str) -> None:
 def delete_task(task_ids: str) -> None:
     _execute(f"DELETE FROM records WHERE task_id IN ({task_ids})")
     _execute(f"DELETE FROM tasks WHERE task_id IN ({task_ids})")
+
+def change_task_name(task_id: int, task_name: str) -> None:
+    _execute(f"UPDATE tasks SET task='{task_name}' WHERE task_id={task_id}")

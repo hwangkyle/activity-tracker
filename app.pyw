@@ -59,13 +59,6 @@ def update_state(task_id: int):
         db._execute(f"DELETE FROM records WHERE record_id={record_id}")
         return [  ]
 
-@app.get('/now')
-def get_now():
-    global now
-    now = datetime.now()
-    return now
-
-@app.get('/year-days/<int:year>')
 def get_year_days(_year: int):
     global year
     global year_days
@@ -112,18 +105,24 @@ def get_calendar():
         year=year
     )
 
-@app.get('/active-dates')
 def get_active_dates():
     global active_dates
     global year
     active_dates = db.get_active_dates(year)
     return active_dates
 
-@app.get('/day-data/<string:dt>')
 def get_day_data(dt: str):
     global day_data
     day_data = db.get_day(dt)
     return day_data
+
+@app.put('/task-name/<int:task_id>/<string:task_name>')
+def change_task_name(task_id: int, task_name: str):
+    global day_data
+    global now
+    db.change_task_name(task_id, task_name)
+    day_data = get_day_data(date_util.dt_to_str(now))
+    return render_template('tasks.html', day_data=day_data, State=enums.State)
 
 if __name__ == '__main__':
     app.run(port=5001)
