@@ -115,6 +115,7 @@ th, td {
     overflow: auto;
     flex: 1 0 calc(50% - var(--margin));
     gap: 1rem;
+    justify-content: center;
 }
 
 #tasks {
