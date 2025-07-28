@@ -6,10 +6,9 @@ from enums import State
 
 DB_PATH = 'C:\\Users\\kyleh\\Documents\\dev\\two-way-tracker\\data.db'
 
-def _get_offset(to_local = True, tweak = False) -> int:
+def _get_offset() -> int:
     """
-    to_local: True if UTC + _get_offset() == local else False (i.e. local + _get_offset() == UTC)
-    tweak: basically use True when inserting/updating, False when selecting
+    In minutes (add to UTC to get local)
     """
     local_dt = datetime.now()
 
@@ -24,17 +23,9 @@ def _get_offset(to_local = True, tweak = False) -> int:
         _utc_dt.microsecond
     )
 
-    diff_dt = local_dt - utc_dt if to_local else utc_dt - local_dt
+    diff_dt = local_dt - utc_dt
 
-    offset = int(diff_dt.total_seconds() / 60)
-
-    if tweak:
-        if offset < 0:
-            offset += 1
-        else:
-            offset -= 1
-    
-    return offset
+    return int(diff_dt.total_seconds() / 60)
 
 def _execute(query: str) -> List[Any]:
     conn = sql.connect(DB_PATH)

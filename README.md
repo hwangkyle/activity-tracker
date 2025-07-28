@@ -35,3 +35,5 @@ CREATE TABLE states (
                      NOT NULL
 );
 ```
+# Screenshot
+![alt text](static/img/image.png)

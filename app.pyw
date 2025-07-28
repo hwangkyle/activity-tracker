@@ -55,13 +55,13 @@ def update_state(task_id: int, viewing_dt: str):
     state_id = int(request.args.get('state_id') or -1)
     record_id = int(request.args.get('record_id') or -1)
     if state_id == State.DONE:
-        x = f"INSERT INTO records (task_id, state_id, datetime) VALUES ({task_id}, {State.DONE}, datetime('{viewing_dt}', '{db._get_offset(False, True)} minute'))"
+        x = f"INSERT INTO records (task_id, state_id) VALUES ({task_id}, {State.DONE})"
         print(x)
         db._execute(x)
         record_id = db._execute("SELECT MAX(record_id) FROM records")
         return [ State.DONE, record_id ]
     elif state_id == State.PASS:
-        x = f"UPDATE records SET state_id={State.PASS}, datetime=datetime('{viewing_dt}', '{db._get_offset(False, True)} minute') WHERE record_id={record_id}"
+        x = f"UPDATE records SET state_id={State.PASS} WHERE record_id={record_id}"
         print(x)
         db._execute(x)
         return [ State.PASS ]
