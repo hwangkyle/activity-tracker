@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
 body {
     --green: 0, 88, 0; /* Anything with >0.69 opacity should have white text */
 
@@ -8,7 +10,7 @@ body {
     
 }
 * {
-    font-family: 'Courier New', Courier, monospace;
+    font-family: "Montserrat", Verdana, Geneva, Tahoma, sans-serif;
 }
 
 .hide {
@@ -92,7 +94,7 @@ th, td {
     cursor: pointer;
 }
 .day.viewing {
-    font-weight: bold;
+    font-weight: 900;
 }
 
 .active {
@@ -180,6 +182,17 @@ th, td {
 .task.done:hover,
 .task.pass:hover {
     text-decoration: underline line-through;
+}
+.task.null {
+    /* pointer-events: none; */
+    cursor: not-allowed;
+}
+.task:hover {
+    text-decoration: none;
+}
+.task.done:hover,
+.task.pass:hover {
+    text-decoration: line-through;
 }
 
 .menu-item * {

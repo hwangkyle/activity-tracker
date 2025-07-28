@@ -24,6 +24,7 @@ const updateCalendar = async (taskIds, useCurr=true) => {
 }
 
 const changeState = async el => {
+    if (today !== currViewedDt) return;
     let [task_id, task, record_id, state_id, state, datetime] = JSON.parse(el.dataset.data.replace(/'/g, '"').replace(/None/g, 'null'))
 
     stateParam = `state_id=${(state_id ?? 0)+1}`;
@@ -139,6 +140,11 @@ const getDayData = async el => {
     document.querySelector(`#date-${currViewedDt}`).classList.remove('viewing');
     document.querySelector(`#date-${dt}`).classList.add('viewing');
     currViewedDt = dt;
+    if (today !== currViewedDt) {
+        document.querySelectorAll('.task').forEach(el => el.classList.add('null'));
+        document.querySelectorAll('.task-options').forEach(el => el.classList.add('hide'));
+        document.querySelector('.task.add-task').classList.add('hide');
+    }
     maintainViews();
 }
 
