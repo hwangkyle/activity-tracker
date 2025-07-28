@@ -15,16 +15,22 @@
         <tbody>
 {% for week in month_days %}
             <tr>
-{% for day in week %}
-{% if day is none %}
+    {% for day in week %}
+        {% if day is none %}
                 <td class="blank"></td>
-{% else %}
-{% set date = year.__str__() + '-' + format_num(month) + '-' + format_num(day) %}
-                <td class="day {{ 'today' if dt_to_str(now).startswith(date) }} {{ 'active' if date in active_dates }}">
+        {% else %}
+            {% set date = year.__str__() + '-' + format_num(month) + '-' + format_num(day) %}
+                <td
+                    id="date-{{date}}"
+                    class="day {{ 'today viewing' if dt_to_str(now).startswith(date) }} {{ 'active' if date in active_dates }}"
+                    data-date={{date}}
+                    data-now="{{dt_to_str(now)}}"
+                    onclick="getDayData(this)"
+                >
                     {{ day }}
                 </td>
-{% endif %}
-{% endfor %}
+        {% endif %}
+    {% endfor %}
             </tr>
 {% endfor %}
         </tbody>

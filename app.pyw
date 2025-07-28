@@ -72,7 +72,7 @@ def add_task(task: str):
         global day_data
         global now
         db.add_task(task)
-        day_data = get_day_data(date_util.dt_to_str(now))
+        day_data = db.get_day(date_util.dt_to_str(now))
         return render_template('tasks.html', day_data=day_data, State=enums.State)
     except Exception as e:
         print('ERROR:', e)
@@ -84,7 +84,7 @@ def delete_task(task_ids: str):
         global day_data
         global now
         db.delete_task(task_ids)
-        day_data = get_day_data(date_util.dt_to_str(now))
+        day_data = db.get_day(date_util.dt_to_str(now))
         return render_template('tasks.html', day_data=day_data, State=enums.State)
 
     except Exception as e:
@@ -111,17 +111,18 @@ def get_active_dates():
     active_dates = db.get_active_dates(year)
     return active_dates
 
+@app.get('/day-data/<string:dt>')
 def get_day_data(dt: str):
     global day_data
     day_data = db.get_day(dt)
-    return day_data
+    return render_template('tasks.html', day_data=day_data, State=enums.State)
 
 @app.put('/task-name/<int:task_id>/<string:task_name>')
 def change_task_name(task_id: int, task_name: str):
     global day_data
     global now
     db.change_task_name(task_id, task_name)
-    day_data = get_day_data(date_util.dt_to_str(now))
+    day_data = db.get_day(date_util.dt_to_str(now))
     return render_template('tasks.html', day_data=day_data, State=enums.State)
 
 if __name__ == '__main__':

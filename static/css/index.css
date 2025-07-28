@@ -85,8 +85,12 @@ th, td {
     border-radius: 0.25rem;
 }
 .day:hover {
-    /* font-weight: bold;
-    cursor: pointer; */
+    font-weight: bold;
+    cursor: pointer;
+}
+.day.viewing {
+    font-weight: bold;
+    background-color: rgba(var(--green), 0.4);
 }
 
 .active {

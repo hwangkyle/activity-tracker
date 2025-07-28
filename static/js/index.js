@@ -5,6 +5,9 @@ const State = Object.freeze({
 
 let currViewedTask = '';
 
+let [__month, __day, __year] = new Date().toLocaleString().split(/,? /g)[0].split('/').map(val => val.length === 1 ? `0${val}` : val);
+let currViewedDt = `${__year}-${__month}-${__day}`;
+
 const updateCalendar = async taskIds => {
     let response = await fetch(`/calendar${ taskIds ? `?task_ids=${taskIds}` : ''}`);
     let html = await response.text();
@@ -115,4 +118,14 @@ const changeTaskName = async el => {
         input.classList.add('hide');
         input.value = el.dataset.taskname;
     }
+}
+
+const getDayData = async el => {
+    let dt = el.dataset.date;
+    let response = await fetch(`/day-data/${dt}`);
+    let html = await response.text();
+    document.querySelector("#tasks").innerHTML = html;
+    document.querySelector(`#date-${currViewedDt}`).classList.remove('viewing');
+    document.querySelector(`#date-${dt}`).classList.add('viewing');
+    currViewedDt = dt;
 }
