@@ -143,4 +143,4 @@ def change_task_name(task_id: int, task_name: str):
     return render_template('tasks.html', day_data=day_data, State=enums.State)
 
 if __name__ == '__main__':
-    app.run(port=5001, debug=True)
+    app.run(debug=True)
