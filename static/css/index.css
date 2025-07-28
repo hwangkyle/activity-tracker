@@ -12,7 +12,10 @@ body {
 }
 
 .hide {
-    display: none;
+    visibility: hidden;
+    position: absolute;
+    left: -100vw;
+    top: -100vh;
 }
 input:focus,
 select:focus,
@@ -179,12 +182,37 @@ th, td {
     text-decoration: underline line-through;
 }
 
+.menu-item * {
+    display: flex;
+}
+
 .trash:hover {
-    fill: rgba(200, 0, 0, 0.3);
+    fill: rgb(255, 0, 0);
 }
 .trash:active {
-    fill: rgba(200, 0, 0, 0.6);
+    fill: rgb(150, 0, 0);
 }
+
+.no-view {
+    opacity: 0.25;
+}
+.view:hover .no-view {
+    opacity: 0.4;
+}
+.yes-view {
+    opacity: 1;
+}
+.view:hover .yes-view {
+    opacity: 0.65;
+}
+
+.edit {
+    opacity: 1;
+}
+.edit:hover{
+    opacity: 0.65;
+}
+
 
 .select-box {
     display: block;
