@@ -7,5 +7,6 @@
 - ~~Make the task name editable.~~
 - ~~Click on date on calendar to show that day's activites.~~
 - ~~Make the green on the calendar a gradient depending on how many tasks were completed.~~
+- Dark mode
 - Make adding and editing a task more clear.
 - Make prettier.
