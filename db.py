@@ -4,7 +4,7 @@ from datetime import datetime, timezone
 
 from enums import State
 
-DB_PATH = '' # Path to db here
+DB_PATH = 'C:\\Users\\kyleh\\Documents\\dev\\activity-tracker\\data.db'
 
 def _get_offset() -> int:
     """

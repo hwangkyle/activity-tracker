@@ -207,7 +207,7 @@ th, td {
     /* pointer-events: none; */
     cursor: not-allowed;
 }
-.task:hover {
+.task.null:hover {
     text-decoration: none;
 }
 .task.done:hover,
