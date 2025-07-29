@@ -19,15 +19,18 @@
         {% if day is none %}
                 <td class="blank"></td>
         {% else %}
-            {% set date = year.__str__() + '-' + format_num(month) + '-' + format_num(day) %}
+            {% set date = year.__str__() + '-' + format_num(month) + '-' + format_num(day[0]) %}
+            {% set opacity = 0.7 * (day[1][0] / day[1][1]) + 0.1 %}
+            {% set color = 'black' if opacity < 0.69 else 'white' %}
                 <td
                     id="date-{{date}}"
                     class="day {{ 'today viewing' if dt_to_str(now).startswith(date) }} {{ 'active' if date in active_dates }}"
+                    style="background-color: rgba(var(--green), {{ opacity }}); color: '{{ color }}'"
                     data-date={{date}}
                     data-now="{{dt_to_str(now)}}"
                     onclick="getDayData(this)"
                 >
-                    {{ day }}
+                    {{ day[0] }}
                 </td>
         {% endif %}
     {% endfor %}

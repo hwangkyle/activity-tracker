@@ -2,6 +2,8 @@ from datetime import datetime
 from calendar import monthrange
 from typing import List
 
+import db
+
 def get_year_days(year: int):
     return [_get_month_days(year, month) for month in range(1, 13)]
 
@@ -18,7 +20,8 @@ def _get_month_days(year: int, month: int) -> List[List[int | None]]:
                 week.append(None)
                 first_weekday -= 1
                 continue
-            week.append(day_count)
+            date = f'{year}-{format_num(month)}-{format_num(day_count)}'
+            week.append((day_count, db.get_num_done(date)))
             day_count += 1
         days.append(week)
     

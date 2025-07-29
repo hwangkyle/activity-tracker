@@ -80,3 +80,12 @@ def delete_task(task_ids: str) -> None:
 
 def change_task_name(task_id: int, task_name: str) -> None:
     _execute(f"UPDATE tasks SET task='{task_name}' WHERE task_id={task_id}")
+
+def get_num_done(dt: str) -> Tuple[int, int]:
+    sql = f"""SELECT count(record_id), count(*)
+        FROM tasks t
+        LEFT JOIN records r ON t.task_id=r.task_id AND date('{dt}')=date(r.datetime, '{_get_offset()} minute')
+        """
+    print(sql)
+    results = _execute(sql)
+    return results[0]

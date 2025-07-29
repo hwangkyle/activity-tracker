@@ -26,7 +26,6 @@ const updateCalendar = async (taskIds, useCurr=true, year=__year) => {
     let response = await fetch(path);
     let html = await response.text();
     document.querySelector("#calendar-container").innerHTML = html;
-    maintainViews();
 }
 
 const changeState = async el => {
@@ -55,6 +54,7 @@ const changeState = async el => {
     el.dataset.data = JSON.stringify([task_id, task,  record_id, new_state_id, state, datetime]);
 
     await updateCalendar();
+    maintainViews();
 }
 
 const toAddTask = el => {
@@ -97,6 +97,7 @@ const viewTask = async el => {
         document.querySelector(`#view-task-${taskId} .no-view`).classList.add('hide');
         currViewedTask = taskId;
     }
+    maintainViews();
 }
 
 const deleteTask = async el => {
@@ -108,6 +109,7 @@ const deleteTask = async el => {
         document.querySelector("#tasks").innerHTML = html;
         updateCalendar();
     }
+    maintainViews();
 }
 
 const toChangeTaskName = el => {
@@ -178,6 +180,12 @@ const localMaintainCalendarView = () => {
         document.querySelector(`#date-${_today}`).classList.add('today');
         today = _today;
     }
+
+    if (currViewedTask)
+        document.querySelectorAll('.day.active').forEach(el => {
+            el.style.backgroundColor = 'rgba(var(--green), 0.8)';
+            el.style.color = 'white';
+        })
 }
 
 const localMaintainTaskView = () => {

@@ -69,13 +69,6 @@ def update_state(task_id: int, viewing_dt: str):
         db._execute(f"DELETE FROM records WHERE record_id={record_id}")
         return [  ]
 
-def get_year_days(_year: int):
-    global year
-    global year_days
-    year = _year
-    year_days = date_util.get_year_days(_year)
-    return year_days
-
 @app.post('/task/<string:task>')
 def add_task(task: str):
     try:

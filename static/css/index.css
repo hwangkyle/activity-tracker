@@ -117,9 +117,8 @@ th, td {
     font-weight: 900;
 }
 
-.active {
-    background-color: rgba(var(--green), 0.8) !important;
-    color: white;
+.day:not(.active) {
+    background-color: white !important;
 }
 .today {
     text-decoration: underline;
