@@ -158,9 +158,9 @@ const getDayData = async el => {
 
 const changeYear = async next => {
     if (next) {
-        updateCalendar(null, true, currViewedYear+1);
+        updateCalendar(null, true, Number(currViewedYear)+1);
     } else {
-        updateCalendar(null, true, currViewedYear-1);
+        updateCalendar(null, true, Number(currViewedYear)-1);
     }
 }
 
