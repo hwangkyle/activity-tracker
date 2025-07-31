@@ -1,17 +1,16 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
 
 body {
-    --green: 0, 88, 0; /* Anything with >0.69 opacity should have white text */
+    --green-hs: 120, 30%;
 
     --gray: 88, 88, 88;
     
     --cell-size: 1.5rem;
-
-    
 }
 * {
     font-family: "Montserrat", Verdana, Geneva, Tahoma, sans-serif;
 }
+
 
 .hide {
     visibility: hidden;
@@ -187,12 +186,12 @@ th, td {
 }
 .task.done {
     text-decoration: line-through;
-    background-color: rgba(var(--green), 0.2);
-    border-color: rgb(var(--green), 0.6);
+    background-color: hsl(var(--green-hs), 60%);
+    border-color: hsl(var(--green-hs), 40%);
 }
 .task.pass {
     text-decoration: line-through;
-    background-color: rgba(var(--gray), 0.2);
+    background-color: rgba(0, 0%, 34.5%);
     color: gray;
     font-style: italic;
 }
@@ -284,4 +283,45 @@ th, td {
     width: 100%;
     border: 0;
     background-color: initial;
+}
+
+
+.dark {
+    color: white;
+    background-color: black;
+    caret-color: white;
+}
+.dark #calendar-container {
+    border-color: white;
+}
+.dark .day:not(.active) {
+    background-color: black !important;
+}
+.dark .task.done {
+    text-decoration: line-through;
+    background-color: hsl(var(--green-hs), 20%);
+    border-color: hsl(var(--green-hs), 50%);
+}
+.dark .task.pass {
+    background-color: hsl(0, 0%, 50%);
+    color: hsl(0, 0%, 30%)
+}
+.dark .menu-item,
+.dark .add-task {
+    fill: white;
+}
+.dark input {
+    color: white;
+}
+.dark .trash:hover {
+    fill: rgb(150, 0, 0);
+}
+.dark .trash:active {
+    fill: rgb(255, 0, 0);
+}
+.dark .year-button {
+    color: white;
+}
+.dark .year-button:hover {
+    background-color: #222;
 }

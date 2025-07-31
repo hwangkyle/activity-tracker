@@ -16,6 +16,8 @@ display_date = date_util.dt_to_str(now)
 active_dates = set()
 day_data = []
 
+dark_mode = True
+
 @app.get('/')
 def index():
     global year_days
@@ -44,7 +46,9 @@ def index():
         dt_to_str=date_util.dt_to_str,
         month_name=calendar.month_name,
         format_num=date_util.format_num,
-        State=enums.State
+        State=enums.State,
+
+        dark_mode=dark_mode
     )
 
 @app.post('/state/<int:task_id>/<string:viewing_dt>')
@@ -109,7 +113,8 @@ def get_calendar(yr: int):
         format_num=date_util.format_num,
         dt_to_str=date_util.dt_to_str,
         now=now,
-        year=year
+        year=year,
+        dark_mode=dark_mode
     )
 
 def get_active_dates():

@@ -8,7 +8,7 @@
 
 {% block body %}
 
-<div id="main">
+<div class="{{ 'dark' if dark_mode }}" id="main">
     <div id="calendar-container">
         {% include 'calendar.html' with context %}
     </div>
