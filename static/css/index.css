@@ -149,18 +149,6 @@ th, td {
     justify-content: space-between;
 }
 
-#tasks-top-menu {
-    border: 1px solid gray;
-    border-radius: 0.5rem;
-    height: 1.5rem;
-    padding: 0.5rem;
-    background-color: rgba(var(--gray), 0.25);
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-}
-
-
 .task-options {
     float: right;
     height: 100%;
@@ -191,7 +179,7 @@ th, td {
 }
 .task.pass {
     text-decoration: line-through;
-    background-color: rgba(0, 0%, 34.5%);
+    background-color: hsl(0, 0%, 34.5%);
     color: gray;
     font-style: italic;
 }
