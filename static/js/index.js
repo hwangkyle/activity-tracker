@@ -12,17 +12,16 @@ let today = `${__year}-${__month}-${__day}`
 let currViewedDt = `${__year}-${__month}-${__day}`;
 let currViewedYear = __year;
 
-const updateCalendar = async (taskIds, useCurr=true, year=__year) => {
+const updateCalendar = async (taskId, useCurr=true, year=__year) => {
     taskParam = '';
-    if (taskIds)
-        taskParam = `?task_ids=${taskIds}`;
+    if (taskId)
+        taskParam = `?task_id=${taskId}`;
     else if (useCurr && currViewedTask)
-        taskParam = `?task_ids=${currViewedTask}`;
+        taskParam = `?task_id=${currViewedTask}`;
 
     currViewedYear = year;
 
     let path = `/calendar/${currViewedYear}${taskParam}`;
-    if (debug) console.log(path);
     let response = await fetch(path);
     let html = await response.text();
     document.querySelector("#calendar-container").innerHTML = html;

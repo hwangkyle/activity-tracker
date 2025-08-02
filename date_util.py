@@ -4,10 +4,10 @@ from typing import List
 
 import db
 
-def get_year_days(year: int):
-    return [_get_month_days(year, month) for month in range(1, 13)]
+def get_year_days(year: int, task_id: str | None = None):
+    return [_get_month_days(year, month, task_id) for month in range(1, 13)]
 
-def _get_month_days(year: int, month: int) -> List[List[int | None]]:
+def _get_month_days(year: int, month: int, task_id: str | None) -> List[List[int | None]]:
     first_weekday, num_days = monthrange(year, month)
     first_weekday = (first_weekday + 1) % 7
 
@@ -21,7 +21,7 @@ def _get_month_days(year: int, month: int) -> List[List[int | None]]:
                 first_weekday -= 1
                 continue
             date = f'{year}-{format_num(month)}-{format_num(day_count)}'
-            week.append((day_count, db.get_num_done(date)))
+            week.append((day_count, db.get_num_done(date, task_id)))
             day_count += 1
         days.append(week)
     

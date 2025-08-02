@@ -20,12 +20,12 @@
                 <td class="blank"></td>
         {% else %}
             {% set date = year.__str__() + '-' + format_num(month) + '-' + format_num(day[0]) %}
-            {% set light = 75 * (day[1][0] / day[1][1]) + 15 if day[1][0] != 0 else 0 %}
+            {% set light = 60 * (day[1][0] / day[1][1]) + 10 if day[1][0] != 0 else 0 %}
             {% set light = light if dark_mode else 100 - light if day[1][0] != 0 else 100 %}
             {% set color = 'black' if light > 45 else 'white' %}
                 <td
                     id="date-{{date}}"
-                    class="day {{ 'today viewing' if dt_to_str(now).startswith(date) }} {{ 'active' if date in active_dates }}"
+                    class="day {{ 'today viewing' if dt_to_str(now).startswith(date) }}"
                     style="background-color: hsl(var(--green-hs), {{ light }}%) !important; color: {{ color }}"
                     data-date={{date}}
                     data-now="{{dt_to_str(now)}}"

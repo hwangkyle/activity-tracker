@@ -13,7 +13,6 @@ year_days = []
 year = -1
 now = datetime.now()
 display_date = date_util.dt_to_str(now)
-active_dates = set()
 day_data = []
 
 dark_mode = True
@@ -24,7 +23,6 @@ def index():
     global year
     global now
     global display_date
-    global active_dates
     global tasks
     global day_data
     
@@ -32,7 +30,6 @@ def index():
     display_date = date_util.dt_to_str(now)
     year_days = date_util.get_year_days(now.year)
     year = now.year
-    active_dates = set(db.get_active_dates(now.year))
     day_data = db.get_day(display_date)
 
     return render_template(
@@ -40,7 +37,6 @@ def index():
         year_days=year_days,
         year=year,
         now=now,
-        active_dates=active_dates,
         day_data=day_data,
 
         dt_to_str=date_util.dt_to_str,
@@ -60,13 +56,11 @@ def update_state(task_id: int, viewing_dt: str):
     record_id = int(request.args.get('record_id') or -1)
     if state_id == State.DONE:
         x = f"INSERT INTO records (task_id, state_id) VALUES ({task_id}, {State.DONE})"
-        print(x)
         db._execute(x)
         record_id = db._execute("SELECT MAX(record_id) FROM records")
         return [ State.DONE, record_id ]
     elif state_id == State.PASS:
         x = f"UPDATE records SET state_id={State.PASS} WHERE record_id={record_id}"
-        print(x)
         db._execute(x)
         return [ State.PASS ]
     else:
@@ -103,12 +97,11 @@ def delete_task(task_ids: str):
 @app.get('/calendar/<int:yr>')
 def get_calendar(yr: int):
     global year
-    task_ids = request.args.get('task_ids')
+    task_id = request.args.get('task_id')
     year = yr if yr else now.year
     return render_template(
         'calendar.html',
-        year_days=date_util.get_year_days(year),
-        active_dates=db.get_active_dates(year, task_ids=task_ids),
+        year_days=date_util.get_year_days(year, task_id=task_id),
         month_name=calendar.month_name,
         format_num=date_util.format_num,
         dt_to_str=date_util.dt_to_str,
@@ -116,12 +109,6 @@ def get_calendar(yr: int):
         year=year,
         dark_mode=dark_mode
     )
-
-def get_active_dates():
-    global active_dates
-    global year
-    active_dates = db.get_active_dates(year)
-    return active_dates
 
 @app.get('/day-data/<string:dt>')
 def get_day_data(dt: str):

@@ -4,7 +4,7 @@ from datetime import datetime, timezone
 
 from enums import State
 
-DB_PATH = 'C:\\Users\\kyleh\\Documents\\dev\\activity-tracker\\data.db'
+DB_PATH = ''
 
 def _get_offset() -> int:
     """
@@ -43,22 +43,6 @@ def _execute(query: str) -> List[Any]:
 def get_tasks() -> List[Any]:
     return _execute("SELECT task_id, task FROM tasks")
 
-def get_active_dates(year: int, task_ids: str | None = None) -> List[Any]:
-    """
-    Only gets this year.
-    """
-    task_ids_where = '' if task_ids is None else f' AND task_id IN ({task_ids})'
-    rows = _execute(
-        f"""
-        SELECT DISTINCT date(r.datetime, '{_get_offset()} minute') as date
-        FROM records r
-        WHERE date >= '{year}' AND state_id=1{task_ids_where}
-        """
-    )
-    results = list(map(lambda x: x[0], rows))
-
-    return results
-
 def get_day(dt: str) -> List[Any]:
     """
     dt should be in local time.
@@ -68,7 +52,6 @@ def get_day(dt: str) -> List[Any]:
         LEFT JOIN records r ON t.task_id=r.task_id AND date('{dt}')=date(r.datetime, '{_get_offset()} minute')
         LEFT JOIN states s ON r.state_id=s.state_id
         """
-    print(sql)
     return _execute(sql)
 
 def add_task(task: str) -> None:
@@ -81,11 +64,12 @@ def delete_task(task_ids: str) -> None:
 def change_task_name(task_id: int, task_name: str) -> None:
     _execute(f"UPDATE tasks SET task='{task_name}' WHERE task_id={task_id}")
 
-def get_num_done(dt: str) -> Tuple[int, int]:
+def get_num_done(dt: str, task_id: str | None = None) -> Tuple[int, int]:
+    where_clause = '' if task_id is None else f'WHERE t.task_id={task_id}'
     sql = f"""SELECT count(record_id), count(*)
         FROM tasks t
         LEFT JOIN records r ON t.task_id=r.task_id AND date('{dt}')=date(r.datetime, '{_get_offset()} minute')
+        {where_clause}
         """
-    print(sql)
     results = _execute(sql)
     return results[0]
