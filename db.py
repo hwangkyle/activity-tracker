@@ -4,7 +4,7 @@ from datetime import datetime, timezone
 
 from enums import State
 
-DB_PATH = ''
+DB_PATH = 'C:\\Users\\kyleh\\Documents\\dev\\activity-tracker\\data.db'
 
 def _get_offset() -> int:
     """
@@ -73,3 +73,14 @@ def get_num_done(dt: str, task_id: str | None = None) -> Tuple[int, int]:
         """
     results = _execute(sql)
     return results[0]
+
+def get_bottom_text() -> str:
+    """Get the bottom text from settings table"""
+    result = _execute("SELECT value FROM settings WHERE key='bottom_text'")
+    return result[0][0] if result else ''
+
+def set_bottom_text(text: str) -> None:
+    """Set the bottom text in settings table"""
+    # Use INSERT OR REPLACE to update if exists, insert if doesn't
+    escaped_text = text.replace("'", "''")
+    _execute(f"INSERT OR REPLACE INTO settings (key, value) VALUES ('bottom_text', '{escaped_text}')")

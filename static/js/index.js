@@ -12,7 +12,7 @@ let today = `${__year}-${__month}-${__day}`
 let currViewedDt = `${__year}-${__month}-${__day}`;
 let currViewedYear = __year;
 
-const updateCalendar = async (taskId, useCurr=true, year=__year) => {
+const updateCalendar = async (taskId, useCurr = true, year = __year) => {
     taskParam = '';
     if (taskId)
         taskParam = `?task_id=${taskId}`;
@@ -28,15 +28,20 @@ const updateCalendar = async (taskId, useCurr=true, year=__year) => {
 }
 
 const changeState = async el => {
-    if (today !== currViewedDt) return;
     let [task_id, task, record_id, state_id, state, datetime] = JSON.parse(el.dataset.data.replace(/'/g, '"').replace(/None/g, 'null'))
 
-    stateParam = `state_id=${(state_id ?? 0)+1}`;
+    stateParam = `state_id=${(state_id ?? 0) + 1}`;
     recordParam = record_id ? `record_id=${record_id}` : null;
     params = [stateParam, recordParam].join('&');
 
-    let response = await fetch(`/state/${task_id}/${currViewedDt}?${params}`, { method: 'POST' });
-    let [ new_state_id, new_record_id ] = await response.json();
+    const dt = new Date();
+    const [y, m, d] = currViewedDt.split('-');
+    dt.setFullYear(y);
+    dt.setMonth(m - 1);
+    dt.setDate(d);
+
+    let response = await fetch(`/state/${task_id}/${dt.valueOf()}?${params}`, { method: 'POST' });
+    let [new_state_id, new_record_id] = await response.json();
 
     if (new_state_id === State.DONE) {
         el.classList.add('done');
@@ -50,7 +55,7 @@ const changeState = async el => {
         el.classList.remove('done');
     }
 
-    el.dataset.data = JSON.stringify([task_id, task,  record_id, new_state_id, state, datetime]);
+    el.dataset.data = JSON.stringify([task_id, task, record_id, new_state_id, state, datetime]);
 
     await updateCalendar();
     maintainViews();
@@ -147,19 +152,19 @@ const getDayData = async el => {
     document.querySelector(`#date-${currViewedDt}`).classList.remove('viewing');
     document.querySelector(`#date-${dt}`).classList.add('viewing');
     currViewedDt = dt;
-    if (today !== currViewedDt) {
-        document.querySelectorAll('.task').forEach(el => el.classList.add('null'));
-        document.querySelectorAll('.task-options').forEach(el => el.classList.add('hide'));
-        document.querySelector('.task.add-task').classList.add('hide');
-    }
+    // if (today !== currViewedDt) {
+    //     document.querySelectorAll('.task').forEach(el => el.classList.add('null'));
+    //     document.querySelectorAll('.task-options').forEach(el => el.classList.add('hide'));
+    //     document.querySelector('.task.add-task').classList.add('hide');
+    // }
     maintainViews();
 }
 
 const changeYear = async next => {
     if (next) {
-        updateCalendar(null, true, Number(currViewedYear)+1);
+        updateCalendar(null, true, Number(currViewedYear) + 1);
     } else {
-        updateCalendar(null, true, Number(currViewedYear)-1);
+        updateCalendar(null, true, Number(currViewedYear) - 1);
     }
 }
 
@@ -171,7 +176,7 @@ const maintainViews = () => {
 const localMaintainCalendarView = () => {
     document.querySelector(`#date-${today}`).classList.remove('viewing');
     document.querySelector(`#date-${currViewedDt}`).classList.add('viewing');
-    
+
     let [__month, __day, __year] = new Date().toLocaleString().split(/,? /g)[0].split('/').map(val => val.length === 1 ? `0${val}` : val);
     let _today = `${__year}-${__month}-${__day}`
     if (today !== _today) {
@@ -199,10 +204,81 @@ function runAtMidnight(callback) {
     const tomorrow = new Date(now);
     tomorrow.setDate(now.getDate() + 1);
     tomorrow.setHours(0, 0, 0, 0); // Set to midnight
-    
+
     const msUntilMidnight = tomorrow.getTime() - now.getTime();
-    
+
     setTimeout(callback, msUntilMidnight);
 }
 
 runAtMidnight(localMaintainCalendarView);
+
+// Bottom text editing functions
+let originalBottomText = '';
+
+const toEditBottomText = () => {
+    const display = document.querySelector('#bottom-text-display');
+    const input = document.querySelector('#bottom-text-input');
+    const editBtn = document.querySelector('#edit-bottom-text-btn');
+    const saveBtn = document.querySelector('#save-bottom-text-btn');
+    const cancelBtn = document.querySelector('#cancel-bottom-text-btn');
+
+    originalBottomText = input.value;
+
+    display.classList.add('hide');
+    input.classList.remove('hide');
+    editBtn.classList.add('hide');
+    saveBtn.classList.remove('hide');
+    cancelBtn.classList.remove('hide');
+    input.focus();
+}
+
+const saveBottomText = async () => {
+    const input = document.querySelector('#bottom-text-input');
+    const text = input.value;
+
+    try {
+        const response = await fetch('/bottom-text', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ text: text })
+        });
+
+        if (response.ok) {
+            const display = document.querySelector('#bottom-text-display');
+            display.innerHTML = text;
+
+            const editBtn = document.querySelector('#edit-bottom-text-btn');
+            const saveBtn = document.querySelector('#save-bottom-text-btn');
+            const cancelBtn = document.querySelector('#cancel-bottom-text-btn');
+
+            display.classList.remove('hide');
+            input.classList.add('hide');
+            editBtn.classList.remove('hide');
+            saveBtn.classList.add('hide');
+            cancelBtn.classList.add('hide');
+        } else {
+            alert('Failed to save text. Please try again.');
+        }
+    } catch (error) {
+        console.error('Error saving bottom text:', error);
+        alert('Error saving text. Please try again.');
+    }
+}
+
+const cancelEditBottomText = () => {
+    const display = document.querySelector('#bottom-text-display');
+    const input = document.querySelector('#bottom-text-input');
+    const editBtn = document.querySelector('#edit-bottom-text-btn');
+    const saveBtn = document.querySelector('#save-bottom-text-btn');
+    const cancelBtn = document.querySelector('#cancel-bottom-text-btn');
+
+    input.value = originalBottomText;
+
+    display.classList.remove('hide');
+    input.classList.add('hide');
+    editBtn.classList.remove('hide');
+    saveBtn.classList.add('hide');
+    cancelBtn.classList.add('hide');
+}

@@ -4,9 +4,10 @@ body {
     --green-hs: 120, 30%;
 
     --gray: 88, 88, 88;
-    
+
     --cell-size: 1.5rem;
 }
+
 * {
     font-family: "Montserrat", Verdana, Geneva, Tahoma, sans-serif;
 }
@@ -18,15 +19,18 @@ body {
     left: -100vw;
     top: -100vh;
 }
+
 input:focus,
 select:focus,
 textarea:focus,
 button:focus {
     outline: none;
 }
+
 h1 {
     margin: 0;
 }
+
 .bold {
     font-weight: bold;
 }
@@ -35,6 +39,11 @@ h1 {
     display: flex;
     height: 100%;
     width: 100%;
+    flex-direction: column;
+}
+
+.upper {
+    display: flex;
 }
 
 #calendar-container {
@@ -61,7 +70,7 @@ h1 {
     flex-wrap: wrap;
     height: fit-content;
     justify-content: space-around;
-    user-select: none; 
+    user-select: none;
     overflow: auto;
     /* height: 100%; */
 }
@@ -78,6 +87,7 @@ h1 {
     gap: 1rem;
     margin-right: 1rem;
 }
+
 .year-button {
     background: none;
     border: none;
@@ -87,6 +97,7 @@ h1 {
     font-size: 1.5rem;
     border-radius: 99rem;
 }
+
 .year-button:hover {
     background-color: #eee;
 }
@@ -99,19 +110,23 @@ h1 {
     flex: 1 0 25%;
 }
 
-th, td {
+th,
+td {
     height: var(--cell-size);
     width: var(--cell-size);
     text-align: center;
     vertical-align: middle;
 }
+
 .day {
     border-radius: 0.25rem;
 }
+
 .day:hover {
     font-weight: bold;
     cursor: pointer;
 }
+
 .day.viewing {
     font-weight: 900;
 }
@@ -119,6 +134,7 @@ th, td {
 .day:not(.active) {
     background-color: white !important;
 }
+
 .today {
     text-decoration: underline;
 }
@@ -153,6 +169,7 @@ th, td {
     float: right;
     height: 100%;
 }
+
 .menu-item {
     cursor: pointer;
     display: inline-flex;
@@ -172,31 +189,38 @@ th, td {
     position: relative;
     padding: 0 1rem;
 }
+
 .task.done {
     text-decoration: line-through;
     background-color: hsl(var(--green-hs), 60%);
     border-color: hsl(var(--green-hs), 40%);
 }
+
 .task.pass {
     text-decoration: line-through;
     background-color: hsl(0, 0%, 34.5%);
     color: gray;
     font-style: italic;
 }
+
 .task:hover {
     text-decoration: underline;
 }
+
 .task.done:hover,
 .task.pass:hover {
     text-decoration: underline line-through;
 }
+
 .task.null {
     /* pointer-events: none; */
     cursor: not-allowed;
 }
+
 .task.null:hover {
     text-decoration: none;
 }
+
 .task.done:hover,
 .task.pass:hover {
     text-decoration: line-through;
@@ -209,6 +233,7 @@ th, td {
 .trash:hover {
     fill: rgb(255, 0, 0);
 }
+
 .trash:active {
     fill: rgb(150, 0, 0);
 }
@@ -216,12 +241,15 @@ th, td {
 .no-view {
     opacity: 0.25;
 }
+
 .view:hover .no-view {
     opacity: 0.4;
 }
+
 .yes-view {
     opacity: 1;
 }
+
 .view:hover .yes-view {
     opacity: 0.65;
 }
@@ -229,7 +257,8 @@ th, td {
 .edit {
     opacity: 1;
 }
-.edit:hover{
+
+.edit:hover {
     opacity: 0.65;
 }
 
@@ -246,6 +275,7 @@ th, td {
     margin-bottom: 0;
     z-index: 99;
 }
+
 .select-box.checked {
     background-color: gray;
 }
@@ -253,10 +283,11 @@ th, td {
 .task-name-container {
     display: inline;
 }
+
 .task-name {
     font-size: 1.5rem;
     text-align: center;
-    user-select: none; 
+    user-select: none;
 }
 
 .add-icon {
@@ -273,43 +304,64 @@ th, td {
     background-color: initial;
 }
 
+.bottom-text {
+    border-top: 1px solid white;
+    padding: 1rem;
+    overflow: auto;
+    font-size: 0.9rem;
+}
+
+.bottom-text>* {
+    margin: 0;
+}
+
 
 .dark {
     color: white;
     background-color: black;
     caret-color: white;
 }
+
 .dark #calendar-container {
     border-color: white;
 }
+
 .dark .day:not(.active) {
     background-color: black !important;
 }
+
 .dark .task.done {
     text-decoration: line-through;
     background-color: hsl(var(--green-hs), 20%);
     border-color: hsl(var(--green-hs), 50%);
 }
+
 .dark .task.pass {
     background-color: hsl(0, 0%, 50%);
     color: hsl(0, 0%, 30%)
 }
+
 .dark .menu-item,
 .dark .add-task {
     fill: white;
 }
+
 .dark input {
     color: white;
 }
+
 .dark .trash:hover {
     fill: rgb(150, 0, 0);
 }
+
 .dark .trash:active {
     fill: rgb(255, 0, 0);
 }
+
 .dark .year-button {
     color: white;
 }
+
 .dark .year-button:hover {
     background-color: #222;
 }

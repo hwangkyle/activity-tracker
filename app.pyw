@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, jsonify
 from datetime import datetime
 import calendar
+import darkdetect
 
 import db
 import date_util
@@ -15,7 +16,7 @@ now = datetime.now()
 display_date = date_util.dt_to_str(now)
 day_data = []
 
-dark_mode = True
+dark_mode = darkdetect.isDark()
 
 @app.get('/')
 def index():
@@ -44,18 +45,16 @@ def index():
         format_num=date_util.format_num,
         State=enums.State,
 
-        dark_mode=dark_mode
+        dark_mode=dark_mode,
+        bottom_text=db.get_bottom_text()
     )
 
-@app.post('/state/<int:task_id>/<string:viewing_dt>')
-def update_state(task_id: int, viewing_dt: str):
-    """
-    viewing_dt should be local
-    """
+@app.post('/state/<int:task_id>/<int:curr_ms>')
+def update_state(task_id: int, curr_ms: int):
     state_id = int(request.args.get('state_id') or -1)
     record_id = int(request.args.get('record_id') or -1)
     if state_id == State.DONE:
-        x = f"INSERT INTO records (task_id, state_id) VALUES ({task_id}, {State.DONE})"
+        x = f"INSERT INTO records (task_id, state_id, datetime) VALUES ({task_id}, {State.DONE}, datetime({curr_ms} / 1000, 'unixepoch'))"
         db._execute(x)
         record_id = db._execute("SELECT MAX(record_id) FROM records")
         return [ State.DONE, record_id ]
@@ -126,6 +125,22 @@ def change_task_name(task_id: int, task_name: str):
     db.change_task_name(task_id, task_name)
     day_data = db.get_day(display_date)
     return render_template('tasks.html', day_data=day_data, State=enums.State)
+
+@app.get('/bottom-text')
+def get_bottom_text():
+    """API endpoint to get the bottom text"""
+    return jsonify({'text': db.get_bottom_text()})
+
+@app.post('/bottom-text')
+def save_bottom_text():
+    """API endpoint to save the bottom text"""
+    try:
+        text = request.json.get('text', '')
+        db.set_bottom_text(text)
+        return jsonify({'success': True})
+    except Exception as e:
+        print('ERROR:', e)
+        return jsonify({'success': False, 'error': str(e)}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)

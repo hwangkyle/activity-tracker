@@ -9,11 +9,29 @@
 {% block body %}
 
 <div class="{{ 'dark' if dark_mode }}" id="main">
-    <div id="calendar-container">
-        {% include 'calendar.html' with context %}
+    <div class="upper">
+        <div id="calendar-container">
+            {% include 'calendar.html' with context %}
+        </div>
+
+        {% include 'today.html' with context %}
     </div>
-    
-    {% include 'today.html' with context %}
+
+    <div class="bottom-text">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <h3 style="margin: 0;">Notes</h3>
+            <div>
+                <button id="edit-bottom-text-btn" onclick="toEditBottomText()" style="cursor: pointer;">Edit</button>
+                <button id="save-bottom-text-btn" class="hide" onclick="saveBottomText()"
+                    style="cursor: pointer; margin-left: 5px;">Save</button>
+                <button id="cancel-bottom-text-btn" class="hide" onclick="cancelEditBottomText()"
+                    style="cursor: pointer; margin-left: 5px;">Cancel</button>
+            </div>
+        </div>
+        <div id="bottom-text-display" style="white-space: pre-wrap;">{{ bottom_text | safe }}</div>
+        <textarea id="bottom-text-input" class="hide"
+            style="width: 100%; min-height: 300px; font-family: inherit; padding: 10px; caret-color: auto;">{{ bottom_text }}</textarea>
+    </div>
 </div>
 
 {% endblock %}
